@@ -47,3 +47,118 @@ public class Puddle : MonoBehaviour
         }
     }
 }
+
+public class Spikebush : MonoBehaviour
+{
+    public float damagePlayerAmount;
+    Material m_Spikebush;
+    private Player player;
+
+    void Start()
+    {
+        player = GameObject.FindGameObject("Player").GetComponent<Player>();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player" && canDamage == true)
+        {
+            player.health - damagePlayerAmount;
+        }
+    }
+}
+
+public class Poisonbush : MonoBehaviour
+{
+    public float poisonDuration;
+    public float poisonDamagePlayerAmount;
+    public float addPoisonDuration;
+    Material m_Poisonbush;
+    private Player player;
+
+    void Start()
+    {
+        player = GameObject.FindGameObject("Player").GetComponent<Player>();
+    }
+
+    void Update()
+    {
+        Poison();
+        PoisonDamage();
+    }
+
+    void Poison()
+    {
+        if(player.poisoned == true)
+        {
+            poisonDuration -= Time.DeltaTime;
+            if (poisonDuration <= 0)
+                player.poisoned == false;
+        }
+    }
+
+    void PoisonDamage()
+    {
+        if (player.poisoned == true)
+            player.health -= poisonDamagePlayerAmount * time.DeltaTime;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player" && canDamage == true)
+        {
+            poisonDuration += addPoisonDuration;
+        }
+    }
+}
+
+public class Pebble : MonoBehaviour
+{
+    Material m_Pebble;
+    private Player player;
+
+    void Start()
+    {
+        player = GameObject.FindGameObject("Player").GetComponent<Player>();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player" && canDamage == true)
+        {
+            player.isFalling;
+        }
+    }
+}
+
+public class Fire : MonoBehaviour
+{
+    public float fireDamagePlayerAmount;
+    Material m_Poisonbush;
+    private Player player;
+
+    void Start()
+    {
+        player = GameObject.FindGameObject("Player").GetComponent<Player>();
+        weather = GameObject.FindGameObject("WheatherManager").GetComponent<WheatherManager>();
+    }
+
+    void Update()
+    {
+        FireDamage();
+    }
+
+    void PoisonDamage()
+    {
+        if (player.burning == true && player.wet == false && weather.isRaining == false)
+            player.health -= fireDamagePlayerAmount * time.DeltaTime;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player" && canDamage == true)
+        {
+            player.burning == true;
+        }
+    }
+}
